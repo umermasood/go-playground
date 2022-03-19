@@ -3,54 +3,47 @@ package main
 import "fmt"
 
 func main() {
-	// * Slice 1 - Creating an empty slice with zero length
-	slc1 := make([]string, 0)
-	fmt.Println("Emp :", slc1)
-	fmt.Println("slc1 length :", len(slc1))
+	// Creates a string slice of length 2 and capacity 3
+	slc := make([]string, 2, 3)
 
-	// Adding values in zero length slc1
-	slc1 = append(slc1, "abacus")
-	slc1 = append(slc1, "charlie")
-	slc1 = append(slc1, "zeta")
-	fmt.Println("Emp :", slc1)
-	fmt.Println("slc1 length :", len(slc1))
+	// Printing an empty slice of length 2
+	fmt.Println("slice :", slc)             // slice : [ ]
+	fmt.Println("slice length :", len(slc)) // slice length : 2
 
-	fmt.Println("-------------------------")
+	// Initializing the slice, using up all of the available length
+	slc[0] = "rick"
+	slc[1] = "morty"
 
-	// * Slice 2 - Creating another empty slice with non-zero length, i.e. 3
-	slc2 := make([]string, 3) // Empty slice of length 3
-	fmt.Println("Emp :", slc2)
-	fmt.Println("slc2 length :", len(slc2))
+	// Now we can't do slc[2] = "summer", because it would throw an error
+	// because we ran out of available length 2
+	// So we comment the next line
+	// slc[2] = "summer"
+	// try running the above line by uncommenting
 
-	// Adding values in non-zero length slc2
-	slc2 = append(slc2, "uno")
-	slc2 = append(slc2, "dos")
-	slc2 = append(slc2, "tres")
-	fmt.Println("Emp :", slc2)
-	fmt.Println("slc2 length :", len(slc2)) // length becomes six
+	fmt.Println("slc Capacity :", cap(slc))  //slc Capacity : 3
+	fmt.Println("slice length :", len(slc))  // slice length : 2
+	fmt.Println("slc[0] address :", &slc[0]) // Memory address of slc[0]
 
-	fmt.Println("-------------------------")
+	// We still have capacity to add new elements. We can do that by using the
+	// builtin append() method
 
-	// * Slice 3 - One liner slice declaration and initialization
-	num_slice := []int{1, 2, 3, 4, 5}
-	fmt.Println("num_slice :", num_slice)
+	slc = append(slc, "summer")
+	fmt.Println("slc Capacity :", cap(slc))  //slc Capacity : 3
+	fmt.Println("slice length :", len(slc))  // slice length : 3
+	fmt.Println("slc[0] address :", &slc[0]) // Memory address of slc[0]
 
-	fmt.Println("-------------------------")
+	// Now we have run out of capacity because we have used up all of the length
+	// and available capacity. It would be reasonable to expect that we won't
+	// be able to add more elements to slc now. But go allows you to add more
+	// elements even if you have run out of capacity.
 
-	// * Slice 4 - Using the slice operator
-	slice_optr := num_slice[1:3]
-	fmt.Println("new slice using operator :", slice_optr)
+	slc = append(slc, "new_element")
+	fmt.Println("slc Capacity :", cap(slc), "Capacity doubled") //slc Capacity : 6
+	fmt.Println("slice length :", len(slc))                     // slice length : 3
+	// Memory address of slc[0] is different now
+	fmt.Println("slc[0] address :", &slc[0], "Memory Address Changed")
 
-	fmt.Println("-------------------------")
-
-	// * Slice 5 - Multi Dimensional Slices
-	slice2D := make([][]int, 3)
-	for i := 0; i < 3; i++ {
-		innerLen := i + 1
-		slice2D[i] = make([]int, innerLen)
-		for j := 0; j < innerLen; j++ {
-			slice2D[i][j] = i + j
-		}
-	}
-	fmt.Println("2d: ", slice2D)
+	// The above chunk of code appends "new_element" to the slc by creating a
+	// new copy of the previous slice which has double capacity compared to
+	// previous slice and has different memory
 }
