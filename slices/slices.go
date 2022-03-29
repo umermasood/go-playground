@@ -10,7 +10,7 @@ func main() {
 	fmt.Println("slice :", slc)             // slice : [ ]
 	fmt.Println("slice length :", len(slc)) // slice length : 2
 
-	// Initializing the slice, using up all of the available length
+	// Initializing the slice, using up all the available length
 	slc[0] = "rick"
 	slc[1] = "morty"
 
@@ -32,7 +32,7 @@ func main() {
 	fmt.Println("slice length :", len(slc))  // slice length : 3
 	fmt.Println("slc[0] address :", &slc[0]) // Memory address of slc[0]
 
-	// Now we have run out of capacity because we have used up all of the length
+	// Now we have run out of capacity because we have used up all the length
 	// and available capacity. It would be reasonable to expect that we won't
 	// be able to add more elements to slc now. But go allows you to add more
 	// elements even if you have run out of capacity.
