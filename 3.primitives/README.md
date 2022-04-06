@@ -6,6 +6,9 @@
   - Floating point
   - Complex
 - Text
+  - String
+  - Byte Slice
+  - Rune
 
 ---
 
@@ -289,7 +292,7 @@ var num complex128 = complex(5, 12)
 
 ---
 
-##Text
+## Text
 
 ### String
 
@@ -313,7 +316,7 @@ this is a string, string
 
 But what does 105, uint8 mean?
 
->Strings in Go are actually aliases for bytes
+> Strings in Go are actually aliases for bytes
 
 ```go
 // Converting the byte back to string gives us the letter i
@@ -326,8 +329,8 @@ Output:
 i, uint8
 ```
 
-* Strings are immutable in Go
-* We can perform string concatenation
+- Strings are immutable in Go
+- We can perform string concatenation
 
 ```go
 s1 := "This is String 1"
@@ -342,10 +345,25 @@ Output:
 This is String 1This is String 2, string
 ```
 
-Another thing that we can do with strings is that we can convert them into collection of bytes. In Go, it's called a 
-slice of byte.
+### Byte Slice
+
+Another thing that we can do with strings is that we can convert them into collection of bytes. In Go, it's called a
+slice of byte or a Byte Slice.
 
 But why would we want to use this slice of bytes?
 
 A lot of functions in Go actually work with byte slices. That makes them much more generic and flexible than hardcoded
 strings.
+
+```go
+s := "This is a string"
+b := []byte(s)
+
+fmt.Printf("%v, %T\n", b, b)
+```
+
+Output:
+
+```
+[84 104 105 115 32 105 115 32 97 32 115 116 114 105 110 103], []uint8
+```
