@@ -367,3 +367,26 @@ Output:
 ```
 [84 104 105 115 32 105 115 32 97 32 115 116 114 105 110 103], []uint8
 ```
+
+### Rune
+
+- String type represents any utf-8 character and rune represents any utf-16 character.
+- When we are declaring a string we use double quotes
+- When we have to declare a rune, we use single quotes.
+- Runes are a type alias for int32's.
+- Like strings can be converted back and forth between collection of bytes, runes are a true type alias. So when we talk about a rune in go, it is the same thing as talking about integer 32.
+
+```go
+	r1 := 'a'
+	var r2 rune = 'b'
+
+	fmt.Printf("%v, %T\n", r1, r1)
+	fmt.Printf("%v, %T\n", r2, r2)
+```
+
+Output:
+
+```
+97, int32
+98, int32
+```
