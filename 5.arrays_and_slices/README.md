@@ -3,14 +3,15 @@
 Arrays and slices are collection types. Arrays form the basis of slices.
 
 - Arrays
+
   - Creation
   - Built-in functions
   - Working with Arrays
 
 - Slices
-    - Creation
-    - Built-in functions
-    - Working with Slices
+  - Creation
+  - Built-in functions
+  - Working with Slices
 
 ## Arrays
 
@@ -159,7 +160,6 @@ func main() {
 
 We also have the cap function on arrays and slices, which basically tells us the size of the underlying array
 
-
 Slices are naturally reference type. Which means that they refer to the same underlying data.
 
 ```go
@@ -169,7 +169,7 @@ import "fmt"
 
 func main() {
   // Slice of length 3
-  x := []int{1, 2, 3}   // Literal syntax for creating a slice	
+  x := []int{1, 2, 3}   // Literal syntax for creating a slice
 
   // Now x and y point to the same underlying array
   y := x
@@ -186,4 +186,66 @@ Output:
 ```
 [1 -10 3]
 [1 -10 3]
+```
+
+There are several other ways of creating slices.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  slcA := []byte{1, 2, 3, 4, 5}
+  slcB := slcA[:]   // All elements of slcA
+  slcC := slcA[1:]  // From index 1 to end
+  slcD := slcA[1:3] // From index 1 to 3
+  slcE := slcA[0]   // Notice, this doesn't create a slice
+
+  fmt.Printf("%v, %T\n", slcA, slcA)
+  fmt.Printf("%v, %T\n", slcB, slcB)
+  fmt.Printf("%v, %T\n", slcC, slcC)
+  fmt.Printf("%v, %T\n", slcD, slcD)
+  fmt.Printf("%v, %T\n", slcE, slcE)
+}
+```
+
+Output:
+
+```
+[1 2 3 4 5], []uint8
+[1 2 3 4 5], []uint8
+[2 3 4 5], []uint8
+[2 3], []uint8
+1, uint8
+```
+
+> Notice that in [1:3] the first number is inclusive and the second number is exclusive
+
+Another example, that shows we can also create a slice from an array
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  arr := [5]byte{1, 2, 3, 4, 5}
+
+  // Create a slice from arr
+  slc := arr[1:4]
+
+  // Changes in slc will affect arr, since slice is of reference type
+  slc[2] = 0
+
+  fmt.Printf("%v, %T\n", arr, arr)
+  fmt.Printf("%v, %T, %v\n", slc, slc, len(slc))
+}
+```
+
+Output:
+
+```
+[1 2 3 0 5], [5]uint8
+[2 3 0], []uint8, 3
 ```
