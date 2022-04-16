@@ -249,3 +249,156 @@ Output:
 [1 2 3 0 5], [5]uint8
 [2 3 0], []uint8, 3
 ```
+
+Another method of creating slices in Go
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  // Another method to create slices in Go
+  slc := make([]byte, 2, 5)
+
+  fmt.Printf("Slc length : %v, Slice Capacity : %v\n", len(slc), cap(slc))
+  // append method takes variadic arguments
+  slc = append(slc, 1, 2, 4, 5) // Appending 3rd, 4th, 5th and 6th values
+  fmt.Printf("Slc length : %v, Slice Capacity : %v\n", len(slc), cap(slc))
+}
+```
+
+Output:
+
+```
+Slc length : 2, Slice Capacity : 5
+Slc length : 6, Slice Capacity : 16
+```
+
+How slices work in go
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  // Creates a string slice of length 2 and capacity 3
+  slc := make([]string, 2, 3)
+
+  // Printing an empty slice of length 2
+  fmt.Println("slice :", slc)             // slice : [ ]
+  fmt.Println("slice length :", len(slc)) // slice length : 2
+
+  // Initializing the slice, using up all the available length
+  slc[0] = "rick"
+  slc[1] = "morty"
+
+  // Now we can't do slc[2] = "summer", because it would throw an error
+  // because we ran out of available length 2
+  // So we comment the next line
+  // slc[2] = "summer"
+  // try running the above line by uncommenting
+
+  fmt.Println("slc Capacity :", cap(slc))  //slc Capacity : 3
+  fmt.Println("slice length :", len(slc))  // slice length : 2
+  fmt.Println("slc[0] address :", &slc[0]) // Memory address of slc[0]
+
+  // We still have capacity to add new elements. We can do that by using the
+  // builtin append() method
+
+  slc = append(slc, "summer")
+  fmt.Println("slc Capacity :", cap(slc))  //slc Capacity : 3
+  fmt.Println("slice length :", len(slc))  // slice length : 3
+  fmt.Println("slc[0] address :", &slc[0]) // Memory address of slc[0]
+
+  // Now we have run out of capacity because we have used up all the length
+  // and available capacity. It would be reasonable to expect that we won't
+  // be able to add more elements to slc now. But go allows you to add more
+  // elements even if you have run out of capacity.
+
+  slc = append(slc, "new_element")
+  fmt.Println("slc Capacity :", cap(slc), "Capacity doubled") //slc Capacity : 6
+  fmt.Println("slice length :", len(slc))                     // slice length : 3
+  // Memory address of slc[0] is different now
+  fmt.Println("slc[0] address :", &slc[0], "Memory Address Changed")
+
+  // The above chunk of code appends "new_element" to the slc by creating a
+  // new copy of the previous slice which has double capacity compared to
+  // previous slice and has different memory
+}
+```
+
+Output:
+
+```
+slice : [ ]
+slice length : 2
+slc Capacity : 3
+slice length : 2
+slc[0] address : 0xc00007e150
+slc Capacity : 3
+slice length : 3
+slc[0] address : 0xc00007e150
+slc Capacity : 6 Capacity doubled
+slice length : 4
+slc[0] address : 0xc00006a180 Memory Address Changed
+```
+
+Concat two slices
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  var slc1 = []byte{1, 2, 3, 4, 5}
+  var slc2 = []byte{6, 7, 8, 9, 10}
+  var concat []byte
+
+  concat = append(slc2, slc1...)
+  concat = append(concat, 0, 0, 0)
+
+  fmt.Println(slc1)
+  fmt.Println(slc2)
+  fmt.Println(concat)
+}
+```
+
+Output:
+
+```
+[1 2 3 4 5]
+[6 7 8 9 10]
+[6 7 8 9 10 1 2 3 4 5 0 0 0]
+```
+
+Kinda special case
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  var slc = []byte{1, 2, 3, 4, 5}
+  var newSlice []byte
+
+  fmt.Println(slc)
+
+  // This is what we do if we want to split the slice into two
+  newSlice = append(slc[:2], slc[3:]...) // get rid of the 3
+
+  fmt.Println(newSlice)
+  fmt.Println(slc) // But slc is also updated
+}
+```
+
+Output:
+
+```
+[1 2 3 4 5]
+[1 2 4 5]
+[1 2 4 5 5]
+```
