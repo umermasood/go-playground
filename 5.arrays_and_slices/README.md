@@ -391,7 +391,7 @@ func main() {
   newSlice = append(slc[:2], slc[3:]...) // get rid of the 3
 
   fmt.Println(newSlice)
-  fmt.Println(slc) // But slc is also updated
+  fmt.Println(slc) // But slc is also updated, this behavior is because slices are reference type
 }
 ```
 
@@ -402,3 +402,33 @@ Output:
 [1 2 4 5]
 [1 2 4 5 5]
 ```
+
+## Summary
+
+### Arrays
+
+- Collection of items with same type
+- Fixed size
+- Declaration styles:
+  - `a := [3]int{1, 2, 3}`
+  - `a := [….]int{1, 2, 3}`
+  - `var a [3]int`
+- Access via zero-based index
+  - `a := [3]int {1, 3, 5} // a[1] == 3`
+- `len` function returns size of array
+- Copies refer to different underlying data
+
+### Slices
+
+- Backed by underlying array
+- Creation Styles:
+  - Slice existing array or slice
+  - Literal style
+  - via `make` function
+    - a := make([]int, 10) // create a slice with length and capacity of 10
+    - a := make([]int, 10, 100) // slice with length of 10 and capacity of 100
+- `len` function returns the length of the slice
+- `cap` function returns the capacity of the underlying array
+- `append` function to add elements to end of the slice or array
+  - May cause expensive copy operations in case of slices, if underlying array is too small and you run out of initial capacity
+- Copies refer to same underlying array; slices are of reference type
