@@ -106,3 +106,176 @@ map[k1:10 k2:20 k3:30]
 0 false
 map[k1:10 k2:69 k4:99]
 ```
+
+> it is conventional to use `ok` in go programs for checking existence of a key-val pair in a map
+
+```go
+_, ok := m["k3"]     // if we don't need the value we can use write only operator
+val, ok := m["k3"]   // if we want to store the value
+```
+
+> **Important:** Maps are reference type, just like slices in go, manipulating a map in one place is going to have impact
+> on every other place that maps is used
+
+---
+
+## Structs
+
+_Struct is a collection type consisting of fields. Structs are useful for grouping data together to form records. Unlike Maps, structs are value types_
+
+This is how to use Structs in Go:
+
+```go
+package main
+
+import "fmt"
+
+type Superhero struct {
+  id         byte
+  name       string
+  superpower string
+  species    string
+  companions []string
+}
+
+func main() {
+  supe0 := Superhero{
+    id:         0,
+    name:       "Batman",
+    superpower: "Rich",
+    species:    "Human",
+    companions: []string{"Alfred", "Robin", "Batwoman"},
+  }
+
+  fmt.Printf("%v, %T", supe0, supe0)
+}
+```
+
+Output:
+
+```
+{0 Batman Rich Human [Alfred Robin Batwoman]}, main.Superhero
+```
+
+### Anonymous Structs
+
+Usually used for short life structs. Anonymous structs are not reusable. This is how we use anonymous structs:
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  supe0 := struct {
+    id         byte
+    name       string
+    superpower string
+    companions []string
+  }{
+    id:         0,
+    name:       "Batman",
+    superpower: "Rich",
+    companions: []string{"Alfred", "Robin", "Batwoman"},
+  }
+
+  fmt.Printf("%v, %T", supe0, supe0)
+}
+```
+
+Output:
+
+```
+{0 Batman Rich [Alfred Robin Batwoman]}, struct { id uint8; name string; superpower string; companions []string }
+```
+
+> **Important:** Unlike Maps and Slices, Structs are value type, but we can change this behavior by using pointers
+
+This is how we change the default behavior of the structs in Go:
+
+```go
+package main
+
+import "fmt"
+
+type Person struct {
+  name string
+  age  int
+}
+
+func newPerson(name string) *Person {
+  p := Person{name: name}
+  p.age = 69
+  return &p
+}
+
+func main() {
+  // This becomes reference type
+  p1 := newPerson("Rick Sanchez")
+  // Since p1 is already a reference type variable p2 will point to the same underlying data
+  p2 := p1
+
+  fmt.Println(p1)
+
+  // changes p1 reflect p2
+  p1.name = "Morty"
+
+  fmt.Println(p2) // Prints &{Morty 69}
+}
+```
+
+Output:
+
+```
+&{Rick Sanchez 69}
+&{Morty 69}
+```
+
+### Embedding
+
+Struct embedding is the practice of embedding one struct in another
+
+Embedding might be confused with inheritance, but it uses a compositional model approach rather than classic OOP Inheritance model.
+
+Key takeaways from embedding in structs are:
+
+- Inheritance is IS-A relationship
+- Embedding is HAS-A relationship
+
+Here's how we embed one struct in another:
+
+```go
+package main
+
+import "fmt"
+
+type Animal struct {
+  name   bool
+  origin bool
+}
+
+type Bird struct {
+  Animal
+  speedKPH float32
+  canFly   bool
+}
+
+func main() {
+  b := Bird{
+    speedKPH: 0,
+    canFly:   false,
+    Animal:   Animal{name: true, origin: false},
+  }
+  fmt.Printf("%v, %T", b, b)
+}
+```
+
+Output:
+
+```
+{{true false} 0 false}, main.Bird
+```
+
+In the above example, `Bird` has no relationship to the struct `Animal` other than the fact that it embeds it.
+Another important thing to note is that in the above example we have used initializer-syntax for the bird struct, in this
+case we have to be aware of the embedding if we want to use Animal properties.
