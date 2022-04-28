@@ -279,3 +279,36 @@ Output:
 In the above example, `Bird` has no relationship to the struct `Animal` other than the fact that it embeds it.
 Another important thing to note is that in the above example we have used initializer-syntax for the bird struct, in this
 case we have to be aware of the embedding if we want to use Animal properties.
+
+---
+
+Tags in `structs`
+
+The format for using tags in structs is to have backticks as delimiters of the tag along with space delimited key-val pairs.
+
+```go
+package main
+
+import (
+  "fmt"
+  "reflect"
+)
+
+type Animal struct {
+  // This tag's value is meaningless to Go
+  name   string `required:"true" max:"100"`
+  origin string
+}
+
+func main() {
+  t := reflect.TypeOf(Animal{})
+  field, _ := t.FieldByName("name")
+  fmt.Println(field.Tag)
+}
+```
+
+Output:
+
+```
+required:"true" max:"100"
+```
