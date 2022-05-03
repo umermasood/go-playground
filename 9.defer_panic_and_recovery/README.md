@@ -106,3 +106,178 @@ Output:
 ```
 Rick
 ```
+
+## Panic
+
+In Go, we don't have exceptions like a lot of other languages.
+
+When a Go application can no longer run, it is in what's known as panic mode.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	x, y := 1, 0
+	fmt.Println(x / y)
+}
+```
+
+Output:
+```
+panic: runtime error: integer divide by zero
+
+goroutine 1 [running]:
+main.main()
+```
+
+We see that our program panicked and threw an error, we can also make our program panic based on some situation:
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Line lumber 1")
+	panic("i paniccc cus something bad happened")
+	fmt.Println("Line lumber 2")
+}
+```
+
+Output:
+
+```go
+Line lumber 1
+panic: i paniccc
+
+goroutine 1 [running]:
+main.main()
+```
+
+We are causing our program to panic, then it is no longer able to run anymore, therefore Line lumber 2 is not executed at all.
+
+> Go is rarely going to set an opinion about whether an error is something that should be panicked over or not, therefore
+> allowing more control for the developer to decide whether that error is a serious problem or not.
+
+> **Important:** Panics happen after deferred statements are executed.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("start")
+	defer fmt.Println("this was deferred")
+	panic("something really bad happened")
+	fmt.Println("end")
+}
+```
+
+Output:
+
+```
+start
+this was deferred
+panic: something really bad happened
+
+goroutine 1 [running]:
+main.main()
+```
+
+The order of execution is really important here:
+
+1. `main()` gets called
+2. `defer` statements are executed
+3. `panic` statements are executed
+4. `return` value is handled
+
+> Any `defer` calls to closed resources would still work even if a function panics
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+)
+
+func main() {
+	fmt.Println("start")
+	defer func() {
+		if err := recover(); err != nil {
+			log.Println("Error:", err)
+		}
+	}()
+	panic("something bad happened")
+	fmt.Println("end")
+}
+```
+
+Output:
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+)
+
+func main() {
+	fmt.Println("start")
+	defer func() {
+		if err := recover(); err != nil {
+			log.Println("Error:", err)
+		}
+	}()
+	panic("something bad happened")
+	fmt.Println("end")
+}
+```
+
+Output:
+
+```
+start
+2022/05/03 13:05:33 Error: something bad happened
+```
+
+Another example:
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+)
+
+func panicker() {
+	fmt.Println("about to panic")
+	defer func() {
+		if err := recover(); err != nil {
+			log.Println("Error:", err)
+		}
+	}()
+	panic("something bad happened")
+	fmt.Println("done panicking")
+}
+
+func main() {
+	fmt.Println("start")
+	panicker()
+	fmt.Println("end")
+}
+```
+
+Output:
+
+```
+start
+about to panic
+2022/05/03 13:44:45 Error: something bad happened
+end
+```
