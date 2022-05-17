@@ -281,3 +281,27 @@ about to panic
 2022/05/03 13:44:45 Error: something bad happened
 end
 ```
+
+---
+
+## Summary
+
+- Defer
+  - Used to delay execution of a function until function exits
+  - Useful to group "open" and "close" functions together
+    - This usage requires care in loops / preferably avoid them in loops
+  - Run in LIFO (Last in - first out) order
+  - Arguments to defer are evaluated at the time defer is called not at the time when function itself is called
+
+- Panic
+  - Occurs when a program can no longer continue to work
+    - Don't use when a file cannot be opened, only use when it is critical
+    - Only use for unrecoverable events i.e. cannot obtain TCP port for a webserver
+  - Function will stop executing
+    - Deferred function will still execute
+  - If nothing handles a panic, program will exit
+
+- Recover
+  - Used to recover from panics
+  - Only useful and makes sense in deferred functions
+  - Current function will not attempt to continue, but higher functions in the call stack will
