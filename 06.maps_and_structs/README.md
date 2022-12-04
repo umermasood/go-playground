@@ -1,4 +1,4 @@
-# Maps and Structs
+# 6. Maps and Structs
 
 These are the two remaining collection types in Go.
 

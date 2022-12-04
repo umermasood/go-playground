@@ -1,4 +1,4 @@
-# 4. Arrays and Slices
+# 5. Arrays and Slices
 
 Arrays and slices are collection types. Arrays form the basis of slices.
 

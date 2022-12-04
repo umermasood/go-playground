@@ -1,4 +1,4 @@
-# Pointers
+# 10. Pointers
 
 - Creating Pointers
 - De-referencing Pointers

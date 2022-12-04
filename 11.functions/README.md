@@ -1,4 +1,4 @@
-# Functions
+# 11. Functions
 
 - Basic Syntax
 - Parameters
